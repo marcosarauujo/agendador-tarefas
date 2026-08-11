@@ -2,6 +2,7 @@ package com.javanauta.marcos.agendador_tarefas.controller;
 
 import com.javanauta.marcos.agendador_tarefas.business.TarefaService;
 import com.javanauta.marcos.agendador_tarefas.business.dto.TarefasDTO;
+import com.javanauta.marcos.agendador_tarefas.infrastructure.enums.StatusNotificacaoEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,7 +26,7 @@ public class TarefaController {
     }
 
     @GetMapping("/eventos")
-    public ResponseEntity<List<TarefasDTO>>  buscaListaTarefaPorPeriodo(
+    public ResponseEntity<List<TarefasDTO>> buscaListaTarefaPorPeriodo(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFinal) {
 
@@ -33,8 +34,26 @@ public class TarefaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TarefasDTO>> buscaTarefasPorEmail(@RequestHeader ("Authorization") String token){
+    public ResponseEntity<List<TarefasDTO>> buscaTarefasPorEmail(@RequestHeader("Authorization") String token) {
         List<TarefasDTO> tarefas = tarefaService.buscaTarefaPorEmail(token);
         return ResponseEntity.ok(tarefas);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deletaTarefaPorId(@RequestParam("id") String id) {
+        tarefaService.deletaTarefaPorId(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<TarefasDTO> alteraStatus(@RequestParam("status") StatusNotificacaoEnum status,
+                                                   @RequestParam("id") String id){
+       return ResponseEntity.ok(tarefaService.alteraStatus(status, id));
+    }
+
+    @PutMapping
+    public ResponseEntity<TarefasDTO> updateTarefas(@RequestBody TarefasDTO dto,
+                                                    @RequestParam("id") String id){
+        return ResponseEntity.ok(tarefaService.updateTarefas(dto, id));
     }
 }

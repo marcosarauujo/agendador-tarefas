@@ -15,4 +15,6 @@ public interface TarefaRepository extends MongoRepository<TarefaEntity, String> 
             LocalDateTime dataInicial, LocalDateTime dataFinal);
 
     List<TarefaEntity> findByEmailUsuario(String email);
+
+
 }
